@@ -35,30 +35,49 @@ public class PlayerBuilding : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1) && Physics.Raycast(Cam.transform.position, Cam.transform.forward, out HitInfo, 100.0f))
         {
-            GameObject Block = Instantiate(GameObject.Find("Cube"));
-            Block.transform.parent = GameObject.Find("Cubes").transform;
-
-            Block.name = "NewCube";
-
-            Vector3 OgPoint;
+           
 
 
 
-            if (HitInfo.transform.gameObject.name == "NewCube")
+            if (HitInfo.transform.parent && HitInfo.transform.parent.name == "Cubes")
             {
-                Vector3 Norm = HitInfo.normal * grid;
+                bool Can = HitInfo.transform.gameObject.GetComponent<BaseCube>().onRightClick();
+
+                if (Can)
+                {
+
+                    GameObject Block = Instantiate(GameObject.Find("BaseCube"));
+                    Block.transform.parent = GameObject.Find("Cubes").transform;
+
+                    Block.name = "NewCube";
+
+                    Vector3 Norm = HitInfo.normal * grid;
 
 
-                OgPoint = HitInfo.transform.position + Norm;
+                    Block.transform.position = HitInfo.transform.position + Norm;
+
+                } else
+                {
+
+                }
+                
 
 
             }
             else
             {
-                OgPoint = new Vector3(Gridify(HitInfo.point.x), Gridify(HitInfo.point.y + grid), Gridify(HitInfo.point.z));
+
+                GameObject Block = Instantiate(GameObject.Find("BaseCube"));
+                Block.transform.parent = GameObject.Find("Cubes").transform;
+
+                Block.name = "NewCube";
+
+                
+
+                Block.transform.position  = new Vector3(Gridify(HitInfo.point.x), Gridify(HitInfo.point.y + grid), Gridify(HitInfo.point.z));
             }
 
-            Block.transform.position = OgPoint;
+            
         }
 
         if (Input.GetMouseButtonDown(0) && Physics.Raycast(Cam.transform.position, Cam.transform.forward, out HitInfo, 100.0f) && HitInfo.transform.gameObject.name == "NewCube")
